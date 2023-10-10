@@ -1,0 +1,40 @@
+@startuml
+title UML-діаграма розгортання ПП
+
+left to right direction
+
+skinparam componentStyle uml1
+
+node "<<Host>>" as dk {
+    node "<<Docker>>" {
+        node "<<Frontend web server>>" as fws
+        node "<<Airflow web server>>" as aws
+        node "<<Database server>>" as ds {
+          database PostgreSQL
+        }
+        node "<<Airflow scheduler>>" as ais
+        node "<<Airflow worker (Recommender)>>" as awr
+        node "<<Redis server>>" as rs
+    }
+}
+
+node "<<User's browser>>" as ub {
+    component [*.js, *.html]
+}
+
+node "<<Developer's browser>>" as dwb {
+    component [*.js, *.html]
+}
+
+node "<<News websites>>" as nws
+
+ds -- fws
+ds -- aws
+ds -- ais
+ds -- awr
+rs -- ais
+rs -- awr
+ub -- fws
+dwb -- aws
+awr -- nws
+@enduml
