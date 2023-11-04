@@ -23,6 +23,7 @@
 Найпростіша форма ідентифікації веб-фреймворку – це подивитися на поле X-Powered-By у заголовку відповіді HTTP. Багато інструментів можна використовувати для відбитків пальців цілі, найпростішим є netcat.
 
 Розглянемо такий HTTP-запит-відповідь:
+```
 \$ nc 127.0.0.1 80
 HEAD / HTTP/1.0
 
@@ -30,10 +31,12 @@ HTTP/1.1 200 OK
 Server: nginx/1.0.14
 [...]
 X-Powered-By: Mono
+```
 
 З поля X-Powered-By ми розуміємо, що фреймворк веб-програми, ймовірно, буде Mono. Однак, хоча цей підхід простий і швидкий, ця методологія не працює в 100 відсотках випадків. Можна легко вимкнути заголовок X-Powered-By за допомогою відповідної конфігурації. Існує також кілька методів, які дозволяють веб-сайту маскувати заголовки HTTP (див. приклад у розділі «Виправлення»). У наведеному вище прикладі ми також можемо помітити, що для обслуговування вмісту використовується певна версія nginx.
 
 Тож у тому ж прикладі тестер міг або пропустити заголовок X-Powered-By, або отримати таку відповідь:
+```
 HTTP/1.1 200 OK
 Server: nginx/1.0.14
 Date: Sat, 07 Sep 2013 08:19:15 GMT
@@ -41,8 +44,10 @@ Content-Type: text/html;charset=ISO-8859-1
 Connection: close
 Vary: Accept-Encoding
 X-Powered-By: Blood, sweat and tears
+```
 
 Іноді існує більше HTTP-заголовків, які вказують на певну структуру. У наступному прикладі, згідно з інформацією з HTTP-запиту, видно, що заголовок X-Powered-By містить версію PHP. Однак заголовок X-Generator вказує на те, що використовуваний фреймворк насправді є Swiftlet, який допомагає тестувальнику проникнення розширити свої вектори атак. Виконуючи відбитки пальців, уважно перевіряйте кожен HTTP-заголовок на наявність таких витоків.
+```
 HTTP/1.1 200 OK
 Server: nginx/1.4.1
 Date: Sat, 07 Sep 2013 09:22:52 GMT
@@ -54,6 +59,7 @@ Expires: Thu, 19 Nov 1981 08:52:00 GMT
 Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0
 Pragma: no-cache
 X-Generator: Swiftlet
+```
 
 ## Cookie-файли
 Іншим подібним і дещо надійнішим способом визначення поточного веб-фреймворку є файли cookie для фреймворку.
@@ -105,6 +111,7 @@ https://wiki.owasp.org/index.php?title=Fingerprint_Web_Application_Framework&act
 
 ## Загальні ідентифікатори
 ## Cookie-файли
+```
 Framework	| Cookie name
 Zope	zope3
 CakePHP	cakephp
@@ -130,8 +137,10 @@ Dynamicweb	Dynamicweb
 LEPTON	lep[some_numeric_value]+sessionid
 Wix	Domain=.wix.com
 VIVVO	VivvoSessionId
+```
 
 ## вихідний код HTML
+```
 Application	Keyword
 WordPress	<meta name="generator" content="WordPress 3.9.2" />
 phpBB	<body id="phpbb"
@@ -139,6 +148,7 @@ Mediawiki	<meta name="generator" content="MediaWiki 1.21.9" />
 Joomla	<meta name="generator" content="Joomla! - Open Source Content Management" />
 Drupal	<meta name="Generator" content="Drupal 7 (http://drupal.org)" />
 DotNetNuke	DNN Platform - [http://www.dnnsoftware.com](http://www.dnnsoftware.com)
+```
 
 ## Загальні маркери
 - %framework_name%
@@ -147,12 +157,14 @@ DotNetNuke	DNN Platform - [http://www.dnnsoftware.com](http://www.dnnsoftware.co
 - running
 
 ## Конкретні маркери
+```
 Framework	Keyword
 Adobe ColdFusion	<!-- START headerTags.cfm
 Microsoft ASP.NET	__VIEWSTATE
 ZK	<!-- ZK
 Business Catalyst	<!-- BC_OBNW -->
 Indexhibit	ndxz-studio
+```
 
 # Виправлення
 Хоча можна спробувати використовувати різні імена файлів cookie (через зміну конфігурацій), приховати або змінити шляхи до файлів/каталогів (через переписування чи зміни вихідного коду), видалення відомих заголовків тощо, такі спроби зводяться до «безпеки через невідомість». Власники/адміністратори системи повинні розуміти, що ці зусилля сповільнюють лише найпростіших противники. Час/зусилля можна краще використати на обізнаність зацікавлених сторін і діяльність з підтримки рішення.
