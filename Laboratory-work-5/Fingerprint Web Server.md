@@ -15,6 +15,7 @@
 Захоплення банера виконується шляхом надсилання HTTP-запиту на веб-сервер і перевірки його заголовка відповіді. Це можна зробити за допомогою різноманітних інструментів, включаючи telnet для запитів HTTP або openssl для запитів через SSL.
 
 Наприклад, ось відповідь на запит від сервера Apache.
+```
 HTTP/1.1 200 OK
 Date: Thu, 05 Sep 2019 17:42:39 GMT
 Server: Apache/2.4.41 (Unix)
@@ -24,9 +25,10 @@ Accept-Ranges: bytes
 Content-Length: 117
 Connection: close
 Content-Type: text/html
-...
+```
 
 Ось ще одна відповідь, цього разу від nginx.
+```
 HTTP/1.1 200 OK
 Server: nginx/1.17.3
 Date: Thu, 05 Sep 2019 17:50:24 GMT
@@ -36,9 +38,10 @@ Last-Modified: Thu, 05 Sep 2019 17:40:42 GMT
 Connection: close
 ETag: "5d71489a-75"
 Accept-Ranges: bytes
-...
+```
 
 Ось як виглядає відповідь від lighttpd.
+```
 HTTP/1.0 200 OK
 Content-Type: text/html
 Accept-Ranges: bytes
@@ -48,14 +51,16 @@ Content-Length: 117
 Connection: close
 Date: Thu, 05 Sep 2019 17:57:57 GMT
 Server: lighttpd/1.4.54
+```
 
 У цих прикладах чітко показано тип і версію сервера. Однак програми, які піклуються про безпеку, можуть маскувати інформацію про сервер, змінюючи заголовок. Наприклад, ось уривок із відповіді на запит сайту зі зміненим заголовком:
+```
 HTTP/1.1 200 OK
 Server: Website.com
 Date: Thu, 05 Sep 2019 17:57:06 GMT
 Content-Type: text/html; charset=utf-8
 Status: 200 OK
-...
+```
 
 У випадках, коли інформація про сервер прихована, тестувальники можуть здогадатися про тип сервера на основі порядку полів заголовка. Зауважте, що у наведеному вище прикладі Apache поля дотримуються такого порядку:
 - Date
@@ -78,16 +83,17 @@ Status: 200 OK
 Веб-сервери можна ідентифікувати, вивчивши їхні відповіді на помилки, а у випадках, коли вони не були налаштовані, їхні сторінки помилок за замовчуванням. Один із способів змусити сервер представити їх — надіслати навмисно неправильні або неправильно сформовані запити.
 
 Наприклад, ось відповідь на запит неіснуючого методу SANTA CLAUS від сервера Apache.
+```
 GET / SANTA CLAUS/1.1
-
-
 HTTP/1.1 400 Bad Request
 Date: Fri, 06 Sep 2019 19:21:01 GMT
 Server: Apache/2.4.41 (Unix)
 Content-Length: 226
 Connection: close
 Content-Type: text/html; charset=iso-8859-1
+```
 
+```
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <html><head>
 <title>400 Bad Request</title>
@@ -96,11 +102,11 @@ Content-Type: text/html; charset=iso-8859-1
 <p>Your browser sent a request that this server could not understand.<br />
 </p>
 </body></html>
+```
 
 Ось відповідь на той самий запит від nginx.
+```
 GET / SANTA CLAUS/1.1
-
-
 <html>
 <head><title>404 Not Found</title></head>
 <body>
@@ -108,11 +114,11 @@ GET / SANTA CLAUS/1.1
 <hr><center>nginx/1.17.3</center>
 </body>
 </html>
+```
 
 Ось відповідь на той самий запит від lighttpd.
+```
 GET / SANTA CLAUS/1.1
-
-
 HTTP/1.0 400 Bad Request
 Content-Type: text/html
 Content-Length: 345
@@ -131,6 +137,7 @@ Server: lighttpd/1.4.54
   <h1>400 Bad Request</h1>
  </body>
 </html>
+```
 
 Оскільки сторінки помилок за замовчуванням пропонують багато відмінних факторів між типами веб-серверів, їх перевірка може бути ефективним методом визначення відбитків пальців, навіть якщо поля заголовків сервера закриті.
 
